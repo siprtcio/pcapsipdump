@@ -133,6 +133,9 @@ size_t expand_dir_template(char *s, size_t max, const char *format,
                 char *out = b64_encode(callid,strlen(callid));
                 if (out!=NULL){
                     strcpy(s1p,out);
+                    for(;*s1p;s1p++){
+                        *s1p = asciisan[*s1p & 0x7f];
+                    }
                     free(out);
                 }
                 i++;
