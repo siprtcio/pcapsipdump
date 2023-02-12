@@ -195,11 +195,14 @@ int main(int argc, char *argv[])
     while(1) {
         signed char c;
 
-        c = getopt (argc, argv, "i:r:d:v:m:n:R:l:B:T:t:P:fpU");
+        c = getopt (argc, argv, "x:i:r:d:v:m:n:R:l:B:T:t:P:fpU");
         if (c == -1)
             break;
 
         switch (c) {
+            case 'x':
+                ifname=optarg;
+                break;
             case 'i':
                 ifname=optarg;
                 break;
