@@ -131,8 +131,10 @@ size_t expand_dir_template(char *s, size_t max, const char *format,
                 i++;
             } else if (c1 == 'x' && (s1l - (s1p - s1)) > strlen(callid) ){
                 char *out = b64_encode(callid,strlen(callid));
-                strcpy(s1p,"out");
-                free(out);
+                if (out!=NULL){
+                    strcpy(s1p,out);
+                    free(out);
+                }
                 i++;
             } else {
                 *(s1p++) = c0;
