@@ -50,7 +50,7 @@ size_t b64_encoded_size(size_t inlen)
 
 const char b64chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-char *b64_encode(const unsigned char *in, size_t len)
+char *b64_encode(const char *in, size_t len)
 {
         char   *out;
         size_t  elen;
@@ -130,8 +130,8 @@ size_t expand_dir_template(char *s, size_t max, const char *format,
                 }
                 i++;
             } else if (c1 == 'x' && (s1l - (s1p - s1)) > strlen(callid) ){
-                char *out = b64_encode((const unsigned char*)callid,strlen(callid));
-                strcpy(s1p,out);
+                char *out = b64_encode(callid,strlen(callid));
+                strcpy(s1p,"out");
                 free(out);
                 i++;
             } else {
