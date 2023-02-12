@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <time.h>
 #include <arpa/inet.h>
+#include <openssl/evp.h>
 
 #include "pcapsipdump_lib.h"
 #include "pcapsipdump_endian.h"
@@ -35,6 +36,20 @@ int mkdir_p(const char *path, mode_t mode) {
     return -1;
 }
 
+static void calculate_md5_of(const void *content, ssize_t len,unsigned char *md5SUM){
+  EVP_MD_CTX *md_ctx;
+  unsigned int i,j;
+  unsigned char md_value[EVP_MAX_MD_SIZE];
+  unsigned int md_len=EVP_MAX_MD_SIZE;
+  md_ctx = EVP_MD_CTX_new();
+  EVP_DigestInit(md_ctx, EVP_md5());
+  EVP_DigestUpdate(md_ctx, content, (size_t) len);
+  EVP_DigestFinal_ex(md_ctx, md_value, &md_len);
+  EVP_MD_CTX_free(md_ctx);
+  for(i = 0,j=0; i < md_len; i++,j+=2){
+    snprintf((char*)&md5SUM[j],3,"%02x",md_value[i]);
+  }
+}
 
 size_t expand_dir_template(char *s, size_t max, const char *format,
                            const char *from,
@@ -77,6 +92,11 @@ size_t expand_dir_template(char *s, size_t max, const char *format,
                 for(;*s1p;s1p++){
                     *s1p = asciisan[*s1p & 0x7f];
                 }
+                i++;
+            } else if (c1 == 'x' && (s1l - (s1p - s1)) > strlen(callid) ){
+                unsigned char md_value[EVP_MAX_MD_SIZE*2];
+                calculate_md5_of(callid,strlen(callid),md_value);
+                strcpy(s1p,(char*)md_value);
                 i++;
             } else {
                 *(s1p++) = c0;

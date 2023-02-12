@@ -1,4 +1,4 @@
-LIBS ?= -lpcap -lstdc++
+LIBS ?= -lpcap -lstdc++ -lssl -lcrypto
 RELEASEFLAGS ?= -O3 -Wall
 #CXXFLAGS ?= --std=c++0x
 
